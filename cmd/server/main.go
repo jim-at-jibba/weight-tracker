@@ -7,11 +7,17 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"jamesbest.tech/weight-tracker/pkg/api"
+	"jamesbest.tech/weight-tracker/pkg/app"
+	"jamesbest.tech/weight-tracker/pkg/repository"
 )
 
+// main is dump and calls run so its easier to test
+// https://pace.dev/blog/2020/02/12/why-you-shouldnt-
+// use-func-main-in-golang-by-mat-ryer.html
 func main() {
 	if err := run(); err != nil {
-		fmt.Fprintf(os.Stderr, "this is hte startup err: %s\\n", err)
+		fmt.Fprintf(os.Stderr, "this is the startup err: %s\\n", err)
 		os.Exit(1)
 	}
 }
@@ -32,15 +38,15 @@ func run() error {
 
 	// create router dependency
 	router := gin.Default()
-	router.use(cors.Default())
+	router.Use(cors.Default())
 
 	// create user service
 	userService := api.NewUserService(storage)
 
 	// create weight service
-	weightService := api.NewWeightService(storage)
+	// weightService := api.NewWeightService(storage)
 
-	server := app.NewServer(router, userService, weightService)
+	server := app.NewServer(router, userService)
 
 	// start server
 	err = server.Run()

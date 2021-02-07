@@ -3,14 +3,30 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"jamesbest.tech/weight-tracker/pkg/api"
 	"jamesbest.tech/weight-tracker/pkg/app"
 	"jamesbest.tech/weight-tracker/pkg/repository"
 )
+
+// use godot package to load/read the .env file and
+// return the value of the key
+func goDotEnvVariable(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	return os.Getenv(key)
+}
 
 // main is dump and calls run so its easier to test
 // https://pace.dev/blog/2020/02/12/why-you-shouldnt-
@@ -25,7 +41,9 @@ func main() {
 // func run will be responsible for setting up the db connection
 // and routers
 func run() error {
-	connectionString := ""
+	dbpath := goDotEnvVariable("DB_PATH")
+
+	connectionString := dbpath
 
 	db, err := setupDatabase(connectionString)
 

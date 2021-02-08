@@ -9,6 +9,11 @@ func (s *Server) Routes() *gin.Engine {
 	v1 := router.Group("/v1/api")
 	{
 		v1.GET("/status", s.ApiStatus())
+		// prefix the user Routes
+		user := v1.Group("/user")
+		{
+			user.POST("", s.CreateUser())
+		}
 	}
 
 	return router
